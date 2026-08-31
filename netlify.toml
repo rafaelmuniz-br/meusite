@@ -2,6 +2,10 @@
   command = "npm run generate"
   publish = ".output/public"
 
+[build.environment]
+  # Nuxt 4.5 exige Node >= 22.19
+  NODE_VERSION = "22"
+
 [[headers]]
   for = "/*"
   [headers.values]
