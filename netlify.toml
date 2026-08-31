@@ -3,8 +3,9 @@
   publish = ".output/public"
 
 [build.environment]
-  # Nuxt 4.5 exige Node >= 22.19
-  NODE_VERSION = "22"
+  # Nuxt 4.5 exige Node >= 22.19 — fixar versão exata pra não cair num 22.x antigo
+  NODE_VERSION = "22.19.0"
+  NPM_VERSION = "10"
 
 [[headers]]
   for = "/*"
