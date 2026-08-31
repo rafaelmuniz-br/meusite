@@ -88,11 +88,11 @@ export const experiences = [
     summary:
       'Manutenção e evolução do GERE, sistema de gerência de eventos da UFBA em operação há mais de 20 anos.',
     highlights: [
-      'Mantive em operação o GERE (Sistema de Gerência de Eventos), plataforma multi-eventos legada com mais de 20 anos de uso, que apoia os eventos acadêmicos da UFBA.',
+      'Estive alocado no GERE (Sistema de Gerência de Eventos), plataforma multi-eventos legada com mais de 20 anos de uso, que apoia os eventos acadêmicos da UFBA.',
       'Configurei eventos pela interface web e dei suporte de rotina a gerentes de eventos e participantes ao longo de 2 anos.',
-      'Corrigi e evoluí o sistema mexendo diretamente no código-fonte (ASP/JavaScript) e no banco de dados (SQL Server), incluindo o desenvolvimento de relatórios em SQL.',
-      'Dei rastreabilidade às mudanças documentando cada alteração no Redmine e acompanhando os chamados no GLPI.',
-      'Reduzi a dependência de suporte individual treinando gerentes de eventos e novos estagiários no uso e na administração do sistema.',
+      'Trabalhei com o código-fonte (ASP/JavaScript) e no banco de dados (SQL Server), incluindo o desenvolvimento de relatórios em SQL.',
+      'Dei rastreabilidade às mudanças documentando tarefas no Redmine e acompanhando os chamados no GLPI.',
+      'Realizei treinamento de gerentes de eventos e novos estagiários no uso e na administração do sistema.',
     ],
   },
   {
