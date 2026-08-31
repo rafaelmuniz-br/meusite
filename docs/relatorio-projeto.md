@@ -12,14 +12,24 @@ o "produto site institucional para clientes" (esse é outro negócio dele, docum
 ## Stack e comandos
 
 - Nuxt 4.5 (usa a estrutura `app/` como srcDir, padrão do Nuxt 4), Vue 3.5, TypeScript.
-- Hospedagem alvo: Netlify (`netlify.toml` já configurado: `npm run generate` →
-  `.output/public`). **Nada foi publicado ainda** — só testado em `localhost` (porta 3000
-  via `npm run dev`). Nunca fazer deploy sem o Rafael pedir explicitamente.
-- `npm run build` (SSR build) e `npm run generate` (estático, o que realmente vai pro
-  Netlify) devem rodar limpos antes de considerar qualquer mudança "pronta".
-- Node local roda em `nvm4w`; `npm install` às vezes falha com um erro esquisito do
-  arborist ("Cannot read properties of null (reading 'edgesOut')") — nesse caso usar
-  `npm install --legacy-peer-deps`.
+- **Publicado no Netlify** (repo `github.com/rafaelmuniz-br/meusite`, branch `main`,
+  auto-deploy). `netlify.toml`: `npm run generate` → `.output/public`.
+- **Config crítica do build no Netlify** (custou 6 tentativas pra achar, 31/08/2026):
+  - Nuxt 4.5 exige Node `>= 22.19` → `NODE_VERSION = "22.19.0"` em `[build.environment]`
+    + `.nvmrc`. Com só `"22"` o Netlify caía num 22.x velho.
+  - O Netlify força `NITRO_PRESET=netlify-static`, que fazia o prerender morrer no
+    meio (menos RAM que o local). Forçamos `nitro.preset = 'static'` (nuxt.config) +
+    `NITRO_PRESET = "static"` (netlify.toml) pra buildar igual ao local, que sempre
+    funcionou.
+  - `nitro.prerender.failOnError = false` + `concurrency: 1` + `NODE_OPTIONS=--max-old-space-size=4096`
+    — resiliência (se uma rota falhar só no ambiente deles, `.output/public` ainda sai
+    e o erro aparece no log).
+  - `.gitattributes` (`* text=auto eol=lf`) pro `.nvmrc` não ir com `\r`.
+- `npm run build` (SSR build) e `npm run generate` (estático, o que vai pro Netlify)
+  devem rodar limpos antes de considerar qualquer mudança "pronta".
+- Node local roda em `nvm4w` (v24.6, tecnicamente abaixo do que o Nuxt pede mas builda);
+  `npm install` às vezes falha com um erro do arborist ("Cannot read properties of null
+  (reading 'edgesOut')") — nesse caso `npm install --legacy-peer-deps`.
 
 ## Identidade visual
 
@@ -147,10 +157,12 @@ está no portfólio) em análise pra substituir o institucional; (3) Freelancer 
 ## Preloader (`SignaturePreloader.vue`)
 
 Passou por duas versões: primeiro um fade-in de letras/palavras, depois virou uma
-**animação de "digitação" estilo terminal** (pedido explícito): revela
-`System.out.println("Rafael Muniz");` caractere por caractere (fonte monoespaçada do
-sistema, sem webfont nova), com prompt `>` e cursor piscando, barra de progresso
-sincronizada. Texto vem de `preloaderPhrase` em `resume.ts`. Roda 1x por sessão
+**animação de "digitação" estilo terminal** (pedido explícito): revela a frase
+caractere por caractere (fonte monoespaçada do sistema, sem webfont nova), com prompt
+`>` e cursor piscando, barra de progresso sincronizada. A frase vem de `resume.ts`:
+`preloaderPhrase` = `System.out.println("Rafael Muniz");` (Java, desktop) e
+`preloaderPhraseMobile` = `print("Rafael Muniz")` (Python, `<= 768px` — escolhida no
+`onMounted` por `matchMedia`, mais curta pra caber). Roda 1x por sessão
 (`sessionStorage`), respeita `prefers-reduced-motion`, nunca trava (timers de segurança
 removem o overlay mesmo se algo falhar).
 
