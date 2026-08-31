@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { preloaderPhrase } from '~/data/resume'
+import { preloaderPhrase, preloaderPhraseMobile } from '~/data/resume'
 
 const STORAGE_KEY = 'rm-preloader-shown'
 const TYPE_SPEED_MS = 45
@@ -12,8 +12,11 @@ const leaving = ref(false)
 const progressActive = ref(false)
 const typedLength = ref(0)
 
-const displayedText = computed(() => preloaderPhrase.slice(0, typedLength.value))
-const revealMs = computed(() => preloaderPhrase.length * TYPE_SPEED_MS)
+// Definido no onMounted conforme a largura da tela (mobile usa a versão Python).
+const phrase = ref(preloaderPhrase)
+
+const displayedText = computed(() => phrase.value.slice(0, typedLength.value))
+const revealMs = computed(() => phrase.value.length * TYPE_SPEED_MS)
 
 let typeTimer: ReturnType<typeof setInterval> | undefined
 let hideTimer: ReturnType<typeof setTimeout> | undefined
@@ -32,6 +35,12 @@ function finish() {
 onMounted(() => {
   let alreadyShown = false
   let prefersReduced = false
+
+  try {
+    if (window.matchMedia('(max-width: 768px)').matches) phrase.value = preloaderPhraseMobile
+  } catch {
+    /* matchMedia indisponível: mantém a frase padrão */
+  }
 
   try {
     alreadyShown = sessionStorage.getItem(STORAGE_KEY) === '1'
@@ -64,7 +73,7 @@ onMounted(() => {
 
   typeTimer = setInterval(() => {
     typedLength.value += 1
-    if (typedLength.value >= preloaderPhrase.length && typeTimer) {
+    if (typedLength.value >= phrase.value.length && typeTimer) {
       clearInterval(typeTimer)
     }
   }, TYPE_SPEED_MS)

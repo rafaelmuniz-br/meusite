@@ -183,4 +183,6 @@ export const skills = [
 ]
 
 // Texto "digitado" no preloader de assinatura (efeito terminal).
+// Desktop: Java. Mobile (<= 768px): Python, mais curto — cabe melhor na tela.
 export const preloaderPhrase = 'System.out.println("Rafael Muniz");'
+export const preloaderPhraseMobile = 'print("Rafael Muniz")'
