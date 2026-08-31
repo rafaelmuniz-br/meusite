@@ -58,8 +58,17 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   nitro: {
+    // O Netlify força o preset "netlify-static"; fixamos "static" pra buildar
+    // igual ao ambiente local (que funciona) e servir .output/public como
+    // site estático puro.
+    preset: 'static',
     prerender: {
       routes: ['/', '/contato', '/experiencia', '/politicas-e-termos'],
+      // 1 rota por vez — reduz pico de memória no builder do Netlify.
+      concurrency: 1,
+      // Se uma rota falhar no ambiente do Netlify, não aborta o generate
+      // inteiro: .output/public ainda é gerado e o erro aparece no log.
+      failOnError: false,
     },
   },
 })
