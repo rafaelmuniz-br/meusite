@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { skills } from '~/data/resume'
+import { useT } from '~/composables/useT'
+
+const t = useT()
 </script>
 
 <template>
   <section id="habilidades" class="skills" aria-labelledby="skills-title">
-    <h2 id="skills-title" class="section-title">Habilidades Técnicas</h2>
+    <h2 id="skills-title" class="section-title">{{ t('skills.title') }}</h2>
     <ul class="skills__list">
       <li v-for="skill in skills" :key="skill" class="skills__badge">{{ skill }}</li>
     </ul>

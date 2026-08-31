@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue'
-import type { Step } from '~/data/projectRequest'
+import type { Step } from '~/data/form/types'
+import { useT } from '~/composables/useT'
 
 const props = defineProps<{ step: Step; askedEarlier: Set<string> }>()
+
+const t = useT()
 
 const ctx = inject('projectRequest') as { form: { answers: Record<string, unknown> } }
 const answers = ctx.form.answers as Record<string, string | string[] | boolean | undefined>
@@ -32,7 +35,7 @@ function isOn(key: string, opt: string) {
       <!-- text -->
       <div v-if="q.type === 'text'" class="prm-field">
         <label :for="'prm-q-' + q.key">
-          {{ q.label }}<span v-if="!q.required" class="prm-opt"> (opcional)</span>
+          {{ q.label }}<span v-if="!q.required" class="prm-opt"> {{ t('prm.optional') }}</span>
         </label>
         <span v-if="q.help" class="prm-help">{{ q.help }}</span>
         <input :id="'prm-q-' + q.key" v-model="answers[q.key]" type="text" :placeholder="q.placeholder" />
@@ -41,7 +44,7 @@ function isOn(key: string, opt: string) {
       <!-- textarea -->
       <div v-else-if="q.type === 'textarea'" class="prm-field">
         <label :for="'prm-q-' + q.key">
-          {{ q.label }}<span v-if="!q.required" class="prm-opt"> (opcional)</span>
+          {{ q.label }}<span v-if="!q.required" class="prm-opt"> {{ t('prm.optional') }}</span>
         </label>
         <span v-if="q.help" class="prm-help">{{ q.help }}</span>
         <textarea
@@ -62,7 +65,7 @@ function isOn(key: string, opt: string) {
             :class="{ 'is-active': answers[q.key] === true }"
             @click="answers[q.key] = true"
           >
-            {{ q.toggleLabels ? q.toggleLabels[0] : 'Sim' }}
+            {{ q.toggleLabels ? q.toggleLabels[0] : t('prm.yes') }}
           </button>
           <button
             type="button"
@@ -70,7 +73,7 @@ function isOn(key: string, opt: string) {
             :class="{ 'is-active': answers[q.key] === false }"
             @click="answers[q.key] = false"
           >
-            {{ q.toggleLabels ? q.toggleLabels[1] : 'Não' }}
+            {{ q.toggleLabels ? q.toggleLabels[1] : t('prm.no') }}
           </button>
         </div>
         <div v-if="q.reveal && answers[q.key] === true" class="prm-reveal">
@@ -97,7 +100,7 @@ function isOn(key: string, opt: string) {
       <!-- tags -->
       <div v-else-if="q.type === 'tags'" class="prm-field">
         <span class="prm-field__label">
-          {{ q.label }}<span class="prm-opt"> (marque quantas quiser)</span>
+          {{ q.label }}<span class="prm-opt"> {{ t('prm.pickMany') }}</span>
         </span>
         <span v-if="q.help" class="prm-help">{{ q.help }}</span>
         <div class="prm-tags" :data-prm-shake="q.key">
@@ -117,19 +120,19 @@ function isOn(key: string, opt: string) {
           v-model="answers[q.key + '__outro']"
           type="text"
           class="prm-tags__outro"
-          placeholder="outro (descreva)"
+          :placeholder="t('prm.otherDescribe')"
         />
       </div>
 
       <!-- color -->
       <div v-else-if="q.type === 'color'" class="prm-field">
-        <span class="prm-field__label">{{ q.label }} <span class="prm-opt">(opcional)</span></span>
+        <span class="prm-field__label">{{ q.label }} <span class="prm-opt">{{ t('prm.optional') }}</span></span>
         <ProjectRequestColorSwatches :field="q.key" />
         <input
           v-model="answers.colorsNote"
           type="text"
           class="prm-colors-extra"
-          placeholder="ou descreva outra cor / observação"
+          :placeholder="t('prm.colorNote')"
         />
       </div>
 

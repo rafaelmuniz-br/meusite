@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useT } from '~/composables/useT'
+
 withDefaults(
   defineProps<{
     period: string
@@ -10,6 +12,8 @@ withDefaults(
   }>(),
   { duration: '', company: '', highlights: () => [] }
 )
+
+const t = useT()
 </script>
 
 <template>
@@ -28,7 +32,7 @@ withDefaults(
 
       <details v-if="highlights.length" class="experience-item__details">
         <summary>
-          <span>Atividades e resultados</span>
+          <span>{{ t('experience.details') }}</span>
           <svg
             class="experience-item__chevron"
             viewBox="0 0 24 24"

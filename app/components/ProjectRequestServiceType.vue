@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { inject } from 'vue'
-import { serviceTypes } from '~/data/projectRequest'
+import { useContent } from '~/composables/useContent'
 
+const content = useContent()
 const ctx = inject('projectRequest') as { form: { serviceType: string }; goNext: () => void }
 
 function select(id: string) {
@@ -13,7 +14,7 @@ function select(id: string) {
 <template>
   <div class="prm-service-grid">
     <button
-      v-for="option in serviceTypes"
+      v-for="option in content.form.serviceTypes"
       :key="option.id"
       type="button"
       class="prm-service-card"

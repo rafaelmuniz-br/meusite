@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { useT } from '~/composables/useT'
+
+const t = useT()
 const year = new Date().getFullYear()
 </script>
 
 <template>
   <footer class="site-footer">
-    <p class="site-footer__copy">© {{ year }} Rafael Muniz</p>
-    <NuxtLink class="site-footer__link" to="/politicas-e-termos">Políticas e Termos</NuxtLink>
+    <p class="site-footer__copy">{{ t('footer.copy', { year }) }}</p>
+    <NuxtLink class="site-footer__link" to="/politicas-e-termos">{{ t('footer.policies') }}</NuxtLink>
   </footer>
 </template>
 

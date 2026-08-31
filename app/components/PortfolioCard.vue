@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
+import { useT } from '~/composables/useT'
+
+const t = useT()
 
 const props = withDefaults(
   defineProps<{
@@ -62,19 +65,19 @@ onBeforeUnmount(() => observer?.disconnect())
       <p class="portfolio-card__description">{{ description }}</p>
       <p v-if="status" class="portfolio-card__status">{{ status }}</p>
       <span class="portfolio-card__link">
-        Visitar site
+        {{ t('portfolio.visit') }}
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="M7 17 17 7M9 7h8v8" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </span>
       <span class="portfolio-card__hint portfolio-card__hint--hover">
-        Passe o mouse para ver a foto
+        {{ t('portfolio.hoverHint') }}
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="m9 6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </span>
       <span class="portfolio-card__hint portfolio-card__hint--touch">
-        Arraste para o lado para ver a foto
+        {{ t('portfolio.dragHint') }}
         <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2">
           <path d="m9 6 6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
         </svg>

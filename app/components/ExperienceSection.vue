@@ -1,13 +1,17 @@
 <script setup lang="ts">
-import { experiences } from '~/data/resume'
+import { useContent } from '~/composables/useContent'
+import { useT } from '~/composables/useT'
+
+const c = useContent()
+const t = useT()
 </script>
 
 <template>
   <section id="experiencia" class="experience" aria-labelledby="experience-title">
-    <h2 id="experience-title" class="section-title">Experiência Profissional</h2>
+    <h2 id="experience-title" class="section-title">{{ t('experience.title') }}</h2>
     <div class="experience__list">
       <ExperienceItem
-        v-for="item in experiences"
+        v-for="item in c.experiences"
         :key="item.role + item.company"
         v-bind="item"
       />

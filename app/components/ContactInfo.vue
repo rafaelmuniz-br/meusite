@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { contacts } from '~/data/resume'
+import { useT } from '~/composables/useT'
+
+const t = useT()
 </script>
 
 <template>
   <ul class="contact-info">
-    <li v-for="item in contacts" :key="item.label" class="contact-info__row">
-      <span class="contact-info__label">{{ item.label }}</span>
+    <li v-for="item in contacts" :key="item.labelKey" class="contact-info__row">
+      <span class="contact-info__label">{{ t(item.labelKey) }}</span>
       <a
         class="contact-info__value"
         :href="item.href"

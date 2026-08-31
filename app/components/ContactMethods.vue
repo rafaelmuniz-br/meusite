@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import { contacts } from '~/data/resume'
+import { useT } from '~/composables/useT'
+
+const t = useT()
 </script>
 
 <template>
   <div class="contact-methods">
     <a
       v-for="item in contacts"
-      :key="item.label"
+      :key="item.labelKey"
       class="contact-methods__card"
       :href="item.href"
       :target="item.external ? '_blank' : undefined"
       :rel="item.external ? 'noopener noreferrer' : undefined"
     >
-      <span class="contact-methods__label">{{ item.label }}</span>
+      <span class="contact-methods__label">{{ t(item.labelKey) }}</span>
       <span class="contact-methods__value">{{ item.value }}</span>
     </a>
   </div>

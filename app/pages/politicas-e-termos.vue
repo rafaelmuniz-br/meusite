@@ -1,31 +1,33 @@
 <script setup lang="ts">
-import { policiesLastUpdated } from '~/data/policies'
+import { useContent } from '~/composables/useContent'
+import { useT } from '~/composables/useT'
+
+const c = useContent()
+const t = useT()
 
 useSeoMeta({
-  title: 'Políticas e Termos — Rafael Muniz',
-  description:
-    'Política de Privacidade, Termos de Uso, Portfólio e Projetos Desenvolvidos e Aviso de Cookies do currículo online de Rafael Muniz.',
+  title: () => t('seo.policiesTitle'),
+  description: () => t('seo.policiesDesc'),
 })
 </script>
 
 <template>
   <div class="policies-page">
     <div class="policies-page__inner">
-      <NuxtLink class="policies-page__back" to="/">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2">
-          <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        Voltar para o currículo
-      </NuxtLink>
+      <div class="policies-page__topbar">
+        <NuxtLink class="policies-page__back" to="/">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          {{ t('policies.back') }}
+        </NuxtLink>
+        <LanguageToggle />
+      </div>
 
       <header class="policies-page__header">
-        <h1>Políticas e Termos</h1>
-        <p>
-          Este site é o currículo pessoal e online de Rafael Muniz. Aqui você encontra, de forma
-          direta, o que ele faz com informações, como funciona o contato e o que rege o uso do
-          conteúdo.
-        </p>
-        <p class="policies-page__updated">Última atualização: {{ policiesLastUpdated }}</p>
+        <h1>{{ t('policies.title') }}</h1>
+        <p>{{ t('policies.intro') }}</p>
+        <p class="policies-page__updated">{{ t('policies.updated', { date: c.policies.lastUpdated }) }}</p>
       </header>
 
       <PolicyAccordion />
@@ -47,13 +49,20 @@ useSeoMeta({
   max-width: 720px;
 }
 
+.policies-page__topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
 .policies-page__back {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   font-size: 0.8125rem;
   color: var(--color-text-secondary);
-  margin-bottom: 2.5rem;
   transition: color 0.15s ease;
 }
 

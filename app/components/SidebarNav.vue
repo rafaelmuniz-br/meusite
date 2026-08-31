@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+import { useT } from '~/composables/useT'
+
+const t = useT()
 
 const navItems = [
-  { label: 'Portfólio', to: '/' },
-  { label: 'Contato', to: '/contato' },
-  { label: 'Experiência', to: '/experiencia' },
+  { labelKey: 'nav.portfolio', to: '/' },
+  { labelKey: 'nav.contato', to: '/contato' },
+  { labelKey: 'nav.experiencia', to: '/experiencia' },
 ]
 
 const route = useRoute()
@@ -26,7 +29,7 @@ function handleClick(to: string, event: MouseEvent) {
 </script>
 
 <template>
-  <nav class="sidebar-nav" aria-label="Seções da página">
+  <nav class="sidebar-nav" :aria-label="t('nav.aria')">
     <ul>
       <li v-for="item in navItems" :key="item.to">
         <NuxtLink
@@ -34,7 +37,7 @@ function handleClick(to: string, event: MouseEvent) {
           :class="{ 'is-active': isActive(item.to) }"
           @click="handleClick(item.to, $event)"
         >
-          {{ item.label }}
+          {{ t(item.labelKey) }}
         </NuxtLink>
       </li>
     </ul>

@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { inject } from 'vue'
-import { tiktokServices } from '~/data/projectRequest'
+import { useContent } from '~/composables/useContent'
+import { useT } from '~/composables/useT'
+
+const content = useContent()
+const t = useT()
 
 const ctx = inject('projectRequest') as { form: { answers: Record<string, unknown> } }
 if (!Array.isArray(ctx.form.answers.tiktokTools)) ctx.form.answers.tiktokTools = []
@@ -15,14 +19,11 @@ function toggle(id: string) {
 
 <template>
   <div class="prm-tiktok">
-    <p class="prm-tiktok__intro">
-      Escolha um ou mais. Pode ser desde só configurar sua transmissão até desenvolver uma
-      ferramenta exclusiva pra você.
-    </p>
+    <p class="prm-tiktok__intro">{{ t('prm.tiktokServicesIntro') }}</p>
 
     <div class="prm-tiktok__grid" data-prm-shake="tiktokTools">
       <button
-        v-for="option in tiktokServices"
+        v-for="option in content.form.tiktokServices"
         :key="option.id"
         type="button"
         class="prm-tiktok-card"

@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { useProjectRequestModal } from '~/composables/useProjectRequestModal'
+import { useT } from '~/composables/useT'
 
 const { open } = useProjectRequestModal()
+const t = useT()
 </script>
 
 <template>
   <section class="contact-cta" aria-labelledby="contact-cta-title">
-    <h2 id="contact-cta-title" class="contact-cta__text">Vamos conversar sobre o seu projeto?</h2>
+    <h2 id="contact-cta-title" class="contact-cta__text">{{ t('cta.title') }}</h2>
     <div class="contact-cta__actions">
       <NuxtLink class="contact-cta__button contact-cta__button--secondary" to="/contato">
-        Enviar mensagem
+        {{ t('cta.send') }}
       </NuxtLink>
       <button type="button" class="contact-cta__button contact-cta__button--primary" @click="open">
-        Descrever projeto
+        {{ t('cta.describe') }}
       </button>
     </div>
   </section>
