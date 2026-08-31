@@ -148,7 +148,7 @@ const selectedChips = computed(() => list.value)
             {{ hex }}
           </button>
         </div>
-        <p v-else class="prm-color-selected__empty">Nenhuma cor selecionada ainda.</p>
+        <p v-else class="prm-color-selected__empty">Nenhuma cor ainda.</p>
       </aside>
     </div>
   </div>
@@ -159,6 +159,7 @@ const selectedChips = computed(() => list.value)
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  max-width: 440px;
 }
 
 .prm-color-tabs {
@@ -265,6 +266,7 @@ const selectedChips = computed(() => list.value)
   width: auto !important;
   height: auto !important;
   flex: 1 1 auto;
+  max-width: 260px;
   aspect-ratio: 1 / 1;
 }
 
@@ -328,9 +330,10 @@ const selectedChips = computed(() => list.value)
 
 .prm-color-selected {
   flex-shrink: 0;
-  width: 168px;
+  min-width: 112px;
+  max-width: 210px;
   border-left: 1px solid var(--color-border);
-  padding-left: 1.25rem;
+  padding-left: 0.9rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -352,18 +355,21 @@ const selectedChips = computed(() => list.value)
 
 .prm-chips {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  flex-flow: column wrap;
+  align-content: flex-start;
+  /* ~5 chips por coluna; ao passar disso, abre nova coluna à direita */
+  max-height: 10.5rem;
+  gap: 0.45rem 0.6rem;
 }
 
 .prm-chip {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
   border: 1px solid var(--color-border-strong);
   border-radius: 999px;
-  padding: 0.35rem 0.6rem;
-  font-size: 0.72rem;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.68rem;
   color: var(--color-text);
   background: transparent;
   cursor: pointer;
@@ -378,8 +384,8 @@ const selectedChips = computed(() => list.value)
 }
 
 .prm-chip__dot {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   border: 1px solid var(--color-border-strong);
   flex-shrink: 0;
@@ -400,8 +406,8 @@ const selectedChips = computed(() => list.value)
   }
 
   .prm-chips {
-    flex-direction: row;
-    flex-wrap: wrap;
+    flex-flow: row wrap;
+    max-height: none;
   }
 }
 </style>

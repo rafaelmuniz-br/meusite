@@ -12,12 +12,13 @@ const ctx = inject('projectRequest') as {
 }
 const form = ctx.form
 
-// Rótulo enxuto pra mensagem: corta a pergunta antes do "?", do ":" ou da 2ª frase,
-// e tira pontuação final — pra não jogar o texto de ajuda dentro do label na mensagem.
-function shortLabel(label: string): string {
-  let s = label
-  const q = s.indexOf('?')
-  if (q !== -1) s = s.slice(0, q)
+// Rótulo pra mensagem: usa o `mine` (voz do cliente, 1ª pessoa) quando existe;
+// senão cai pro label enxuto (corta antes do "?", ":" ou 2ª frase).
+function msgLabel(q: Question): string {
+  if (q.mine) return q.mine
+  let s = q.label
+  const i = s.indexOf('?')
+  if (i !== -1) s = s.slice(0, i)
   else if (s.includes(':')) s = s.slice(0, s.indexOf(':'))
   else if (s.includes('. ')) s = s.slice(0, s.indexOf('. '))
   return s.replace(/[\s.:?]+$/, '').trim()
@@ -25,10 +26,10 @@ function shortLabel(label: string): string {
 
 function fmtAnswer(q: Question, a: Answers): string | null {
   if (q.type === 'logo') {
-    if (a.hasLogo === true) return 'Já tem logo — vai enviar o arquivo pelo WhatsApp'
+    if (a.hasLogo === true) return 'já tenho, envio o arquivo pelo WhatsApp'
     if (a.hasLogo === false) {
       const idea = ((a.logoIdea as string) || '').trim()
-      return idea ? `Não tem logo — ideia: ${idea}` : 'Não tem logo — desenvolver do zero'
+      return idea ? `ainda não tenho — ideia: ${idea}` : 'ainda não tenho, quero desenvolver do zero'
     }
     return null
   }
@@ -75,9 +76,9 @@ function buildMessage(): string {
       if (seen.has(q.key)) continue
       seen.add(q.key)
       const val = fmtAnswer(q, form.answers)
-      if (val) block.push(`${shortLabel(q.label)}: ${val}`)
+      if (val) block.push(`${msgLabel(q)}: ${val}`)
     }
-    if (block.length) lines.push(`*${step.title}*`, ...block, '')
+    if (block.length) lines.push(`*${step.mineTitle ?? step.title}*`, ...block, '')
   }
 
   return lines.join('\n').trim()

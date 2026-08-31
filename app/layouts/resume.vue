@@ -6,7 +6,6 @@
         <slot />
       </main>
     </div>
-    <SiteFooter />
     <ProjectRequestModal />
   </div>
 </template>

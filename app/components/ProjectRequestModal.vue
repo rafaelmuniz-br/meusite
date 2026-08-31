@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, provide, reactive, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useProjectRequestModal } from '~/composables/useProjectRequestModal'
 import {
   genericSteps,
@@ -194,6 +195,17 @@ watch(isOpen, (open) => {
     window.removeEventListener('keydown', onKeydown)
   }
 })
+
+// No desktop a sidebar continua clicável com o modal aberto (o overlay só cobre a
+// área principal). Se a pessoa navega pra outra seção, fecha o modal — senão ele
+// fica por cima escondendo a página nova.
+const route = useRoute()
+watch(
+  () => route.fullPath,
+  () => {
+    if (isOpen.value) resetAndClose()
+  }
+)
 
 onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)

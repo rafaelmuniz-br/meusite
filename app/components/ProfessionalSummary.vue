@@ -12,6 +12,7 @@ const lines = computed(() => summary.text.split('\n'))
       <template v-for="(line, i) in lines" :key="i">
         {{ line }}<br v-if="i < lines.length - 1" />
       </template>
+      <br class="summary__break-mobile" />
       <span class="summary__highlight">{{ summary.highlight }}</span>
     </p>
   </section>
@@ -31,5 +32,16 @@ const lines = computed(() => summary.text.split('\n'))
 
 .summary__highlight {
   color: var(--color-text);
+}
+
+/* quebra extra antes de "Eu faço acontecer." só no mobile */
+.summary__break-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .summary__break-mobile {
+    display: revert;
+  }
 }
 </style>

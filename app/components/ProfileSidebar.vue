@@ -35,6 +35,10 @@ onMounted(checkPhoto)
       <ContactInfo />
       <Education />
       <SidebarNav />
+
+      <footer class="sidebar__footer">
+        <NuxtLink class="sidebar__footer-link" to="/politicas-e-termos">Políticas e Termos</NuxtLink>
+      </footer>
     </div>
   </aside>
 </template>
@@ -92,6 +96,26 @@ onMounted(checkPhoto)
   margin-bottom: 2.25rem;
 }
 
+.sidebar__footer {
+  margin-top: auto;
+  padding-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  color: var(--color-text-tertiary);
+}
+
+.sidebar__footer-link {
+  color: var(--color-text-tertiary);
+  transition: color 0.15s ease;
+}
+
+.sidebar__footer-link:hover,
+.sidebar__footer-link:focus-visible {
+  color: var(--color-text-secondary);
+}
+
 @media (max-width: 1000px) {
   .sidebar {
     padding: 3rem 2rem;
@@ -119,6 +143,12 @@ onMounted(checkPhoto)
   .sidebar__name {
     font-size: 1.6rem;
     margin-bottom: 1.75rem;
+  }
+
+  .sidebar__footer {
+    margin-top: 1.75rem;
+    padding-top: 0;
+    align-items: center;
   }
 }
 </style>

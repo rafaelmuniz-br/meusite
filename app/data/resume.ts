@@ -170,10 +170,15 @@ export const portfolio = [
 export const skills = [
   'Vue.js / Nuxt',
   'JavaScript / HTML / CSS',
+  'Java',
+  'ASP',
   'Docker / Git',
   'Python / Power BI',
   'SQL / MySQL / SQL Server',
   'APIs REST',
+  'WordPress',
+  'AVA Moodle',
+  'Scrum / Kanban',
   'Figma / UI/UX',
 ]
 

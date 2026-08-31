@@ -59,9 +59,14 @@ habilidades, frase do preloader) e `app/data/policies.ts`.
 
 ## Layout: sidebar + main (`layouts/resume.vue`)
 
-`politicas-e-termos.vue` usa `layouts/default.vue` (só conteúdo + rodapé, sem sidebar).
-As outras 3 páginas usam `layouts/resume.vue`: sidebar fixa à esquerda (foto, nome,
-contatos, formação numa linha só, menu) + área principal à direita.
+`politicas-e-termos.vue` usa `layouts/default.vue` (só conteúdo + `SiteFooter.vue`, sem
+sidebar). As outras 3 páginas usam `layouts/resume.vue`: sidebar fixa à esquerda (foto,
+nome, contatos, formação numa linha só, menu, e — **desde 31/08/2026** — o link
+"Políticas e Termos" no fim do `.sidebar__inner` (empurrado pra baixo por
+`margin-top:auto`; o "© ANO Rafael Muniz" chegou a ficar aqui junto mas o Rafael
+pediu pra tirar, deixando só o link) + área principal à direita. O `<SiteFooter />` foi
+**removido do `layouts/resume.vue`** nessa data; ele só existe agora na página de
+Políticas e Termos (que não tem sidebar pra encaixar o rodapé).
 
 - Desktop (`min-width: 901px`): `flex-direction: row`, sidebar `width: 30%` com
   `min-width:300px` / `max-width:400px`, `position: sticky`. Área principal usa
@@ -70,9 +75,8 @@ contatos, formação numa linha só, menu) + área principal à direita.
 - Mobile: empilha normalmente, sidebar vira topo da página.
 
 **Menu lateral (`SidebarNav.vue`)**: 3 itens — Portfólio (`to: '/'`), Contato
-(`to: '/contato'`), Experiência (`to: '/experiencia'`). (Um link "Políticas e Termos"
-chegou a ser adicionado aqui em 30/08/2026 e removido no mesmo dia — o Rafael preferiu
-deixar só o link do rodapé, `SiteFooter.vue`.) O item ativo é definido só por
+(`to: '/contato'`), Experiência (`to: '/experiencia'`). (O link "Políticas e Termos" agora vive no rodapé DENTRO da sidebar — ver seção acima.)
+O item ativo é definido só por
 `route.path === item.to`, **não por scroll-spy**. Isso já foi tentado com
 `IntersectionObserver` e quebrou (a faixa de detecção de scroll não fazia sentido quando
 cada item do menu aponta pra uma página inteira, não uma seção de uma página só) — não
@@ -178,9 +182,10 @@ Referência do que o prompt de site precisa: `myCRM/docs/prompt-desenvolvimento-
 
 - `composables/useProjectRequestModal.ts` — singleton reativo (`isOpen`/`open()`/`close()`).
 - **`data/projectRequest.ts`** — TODO o conteúdo + o modelo. `Question` (`type: 'text' |
-  'textarea' | 'toggle' | 'tags' | 'color' | 'logo'`, `key`, `label`, `help?`,
-  `required?`, `toggleLabels?`, `options?` p/ tags, `reveal?` p/ pergunta-filha do
-  toggle) e `Step` (`id`, `title`, `intro?`, `questions[]`). Exports: `serviceTypes`,
+  'textarea' | 'toggle' | 'tags' | 'color' | 'logo'`, `key`, `label` [voz do Rafael],
+  `mine?` [voz do cliente, pra mensagem], `help?`, `required?`, `toggleLabels?`,
+  `options?` p/ tags, `reveal?` p/ pergunta-filha do toggle) e `Step` (`id`, `title`,
+  `mineTitle?`, `intro?`, `questions[]`). Exports: `serviceTypes`,
   `siteSteps`, `genericSteps` (whatsapp/instagram/sistema/suporte/outro), `tiktokServices`
   (os 15), `tiktokToolDetails` (perguntas por ferramenta), `tiktokChannelStep`,
   `linksStep`, `isAnswered()`, `serviceLabel()`, `tiktokLabel()`.
@@ -208,12 +213,21 @@ Referência do que o prompt de site precisa: `myCRM/docs/prompt-desenvolvimento-
     e a pergunta-problema de cada serviço (`waProblem`, `igProblem`, `sysProblem`,
     `supProblem`, `otherNeed`, `sup.problema`).
   - `provide('projectRequest', { form, goNext, goBack, flow })`.
+  - **Fecha ao navegar**: no desktop o overlay do modal só cobre a área principal
+    (`left: clamp(...)`), então a sidebar continua clicável com o modal aberto. Um
+    `watch(() => route.fullPath)` chama `resetAndClose()` quando a rota muda — senão o
+    modal fica por cima escondendo a página nova (bug reportado 31/08/2026).
 - **`components/ProjectRequestReview.vue`** — `buildMessage()` genérico: percorre
   `ctx.flow.value` (menos onboarding/service/tiktok-tools/review), por etapa com
-  respostas emite `*Título da etapa*` + `Rótulo curto: resposta` (com `seen` Set pro
-  mesmo dedup do UI). `shortLabel()` corta a pergunta antes do `?`/`:`/2ª frase.
-  Cabeçalho: `Olá, Rafael! Tenho interesse em *<serviço>*.` + (TikTok) lista das
-  ferramentas. Abre `wa.me/{numero}?text=...`.
+  respostas emite `*Título da etapa*` + `Rótulo: resposta` (com `seen` Set pro mesmo
+  dedup do UI). Cabeçalho: `Olá, Rafael! Tenho interesse em *<serviço>*.` + (TikTok)
+  lista das ferramentas. Abre `wa.me/{numero}?text=...`.
+  - **VOZ (31/08/2026)**: a mensagem é o CLIENTE falando com o Rafael, então usa
+    `Question.mine` / `Step.mineTitle` (1ª pessoa — "O que eu faço", "Minha história",
+    "Meus contatos") em vez do `label`/`title` do formulário (2ª pessoa — "O que você
+    faz", que é o Rafael perguntando). Se `mine` faltar, `msgLabel()` cai pro label
+    enxuto (corta antes do `?`/`:`/2ª frase). A frase de logo também é 1ª pessoa
+    ("Logo: já tenho, envio o arquivo pelo WhatsApp").
 - `ProjectRequestSiteBasics/SiteContent/SiteReferences/GenericNeed/Contact` **foram
   removidos** — o renderer genérico + os dados fazem tudo.
 
@@ -321,11 +335,14 @@ Estado atual da UI: duas abas ("Amostras" / "Cor precisa") com o **mesmo estilo 
 botões Sim/Não** (fundo preto + borda quando inativo, fundo branco + texto escuro
 quando ativo/selecionado — esse par de cores invertido foi um pedido explícito do
 Rafael, replicado nos toggles e tags do `ProjectRequestQuestionStep.vue` e nos tabs
-de cor). Painel de cores selecionadas
-fica **ao lado** (sidebar direita, não embaixo), sempre visível nas duas abas. Cada cor
-selecionada é um chip clicável — clicar no chip inteiro remove a cor (sem botão "×"
-separado). Mensagem final mostra só o hex de cada cor (sem nome curado, já que a rampa
-é gerada, não teria nome natural).
+de cor). Painel "Selecionadas" fica **ao lado** (direita, não embaixo), sempre visível
+nas duas abas. Cada cor é um chip clicável — clicar no chip inteiro remove a cor.
+No **desktop** os chips são `flex-flow: column wrap` com `max-height` ~10.5rem → 5 por
+coluna, e ao passar disso abre nova coluna à direita (pedido do Rafael, 31/08/2026;
+`.prm-color-selected` tem `min-width:112px / max-width:210px` pra caber até 2 colunas
+sem estourar). No mobile volta a ser `row wrap`. O tamanho geral do seletor está
+capado (`.prm-color-picker { max-width: 440px }`) pra não ficar gigante.
+Mensagem final mostra só o hex de cada cor.
 
 ### Textos dos tipos de serviço
 
