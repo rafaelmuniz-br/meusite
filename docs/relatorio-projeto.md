@@ -63,9 +63,33 @@ Multi-página (não é mais single-page-com-âncoras como a primeira versão):
   pedir revisão/remoção pelo canal de contato), Aviso de Cookies — num acordeão nativo
   (`<details>`, componente `PolicyAccordion.vue`) — funciona sem JS.
 
-Todos os textos ficam centralizados em `app/data/resume.ts` (perfil, contatos, idiomas
-removidos depois — ver changelog, formação, resumo, experiências, portfólio,
-habilidades, frase do preloader) e `app/data/policies.ts`.
+Todos os textos ficam centralizados em `app/data/`. Desde o i18n (31/08/2026) o
+conteúdo traduzível está dividido por idioma: `resume.{pt,en}.ts`, `policies.{pt,en}.ts`,
+`form/{pt,en}.ts`, mais `ui.ts` (strings curtas de UI) e `content.ts` (junta tudo em
+`CONTENT[locale]`). `resume.ts`/`policies.ts` guardam só o que NÃO traduz (perfil,
+contatos, número de WhatsApp, habilidades, frase do preloader) + os tipos. Ver a
+seção "i18n" abaixo.
+
+## i18n — tradutor PT⇄EN (31/08/2026)
+
+Site inteiro traduzível, seletor `PT | EN` (`LanguageToggle.vue`) na sidebar e no
+header de Políticas. **Sem `@nuxtjs/i18n`** — solução caseira: site estático, 2
+idiomas, sem pluralização.
+
+- `composables/useLocale.ts` — singleton de módulo `locale` (ref), `setLocale()` grava
+  o cookie `rm-locale` (1 ano) e dispara `switching`/`switchPhrase`.
+- `plugins/i18n.client.ts` — idioma inicial: cookie `rm-locale`, senão
+  `navigator.language` (`en*` → en).
+- `composables/useContent.ts` (`useContent()` → `computed(CONTENT[locale])`) e
+  `composables/useT.ts` (`t('chave', { var })` sobre `ui.ts`, fallback PT).
+- No formulário, `key`/`id`/`type` são iguais nos 2 idiomas → **respostas sobrevivem à
+  troca de idioma no meio do preenchimento**.
+- HTML pré-renderado em PT; visitante EN recorrente vê ~1 frame de PT no reload duro
+  (hydration patch do Vue, silencioso em produção). Troca manual é 100% client-side.
+- `SignaturePreloader.vue` ganhou um 2º modo: na troca de idioma cobre a tela digitando
+  `setLocale("xx")` e revela a página traduzida.
+- `app.vue` tem `useHead` reativo (title/description/og/lang); páginas usam
+  `useSeoMeta` reativo.
 
 ## Layout: sidebar + main (`layouts/resume.vue`)
 
@@ -193,14 +217,18 @@ Referência do que o prompt de site precisa: `myCRM/docs/prompt-desenvolvimento-
 (Prompt A/B) e `negocio-e-contrato.md`.
 
 - `composables/useProjectRequestModal.ts` — singleton reativo (`isOpen`/`open()`/`close()`).
-- **`data/projectRequest.ts`** — TODO o conteúdo + o modelo. `Question` (`type: 'text' |
+- **`data/form/types.ts`** — o modelo. `Question` (`type: 'text' |
   'textarea' | 'toggle' | 'tags' | 'color' | 'logo'`, `key`, `label` [voz do Rafael],
   `mine?` [voz do cliente, pra mensagem], `help?`, `required?`, `toggleLabels?`,
   `options?` p/ tags, `reveal?` p/ pergunta-filha do toggle) e `Step` (`id`, `title`,
-  `mineTitle?`, `intro?`, `questions[]`). Exports: `serviceTypes`,
+  `mineTitle?`, `intro?`, `questions[]`). `FormContent` agrega `serviceTypes`,
   `siteSteps`, `genericSteps` (whatsapp/instagram/sistema/suporte/outro), `tiktokServices`
   (os 15), `tiktokToolDetails` (perguntas por ferramenta), `tiktokChannelStep`,
-  `linksStep`, `isAnswered()`, `serviceLabel()`, `tiktokLabel()`.
+  `linksStep`. Helpers: `isAnswered()`, `labelOf(lista, id, fallback)`.
+- **`data/form/pt.ts` e `data/form/en.ts`** — o conteúdo, um por idioma (i18n de
+  31/08/2026; `projectRequest.ts` foi removido). Editar pergunta = mexer nos dois.
+  `serviceLabel`/`tiktokLabel` viraram `labelOf(useContent().form.*, id)` no
+  `ProjectRequestReview.vue`.
   **Editar/adicionar pergunta = mudança só neste arquivo.**
 - **`components/ProjectRequestQuestionStep.vue`** — renderer genérico de um `Step`.
   Recebe `step` + `askedEarlier: Set<string>`; para cada pergunta ainda não perguntada,
@@ -359,9 +387,10 @@ Mensagem final mostra só o hex de cada cor.
 ### Textos dos tipos de serviço
 
 Rótulos curtos por pedido explícito: "Site", "WhatsApp", "Instagram", "TikTok",
-"Sistema", "Suporte", "Outro". Ver `serviceTypes` em `data/projectRequest.ts`. Todo o
-resto do conteúdo (perguntas, etapas, opções de tags) também vive nesse arquivo — é
-onde o Rafael edita se quiser mudar/adicionar pergunta.
+"Sistema", "Suporte", "Outro" (EN: "Website", "System", "Support", "Other"). Ver
+`serviceTypes` em `data/form/pt.ts` / `data/form/en.ts`. Todo o resto do conteúdo
+(perguntas, etapas, opções de tags) também vive nesses dois arquivos — é onde o
+Rafael edita se quiser mudar/adicionar pergunta.
 
 O botão "Descrever projeto" no `ContactCta.vue` **não tem mais o ícone do WhatsApp** ao
 lado do texto (removido a pedido — o botão só abre o modal, não vai direto pro WhatsApp;
