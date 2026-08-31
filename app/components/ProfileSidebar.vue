@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref, useTemplateRef } from 'vue'
 import { profile } from '~/data/resume'
+import { useT } from '~/composables/useT'
+
+const t = useT()
 
 const imgFailed = ref(false)
 const photoEl = useTemplateRef<HTMLImageElement>('photoEl')
@@ -37,7 +40,8 @@ onMounted(checkPhoto)
       <SidebarNav />
 
       <footer class="sidebar__footer">
-        <NuxtLink class="sidebar__footer-link" to="/politicas-e-termos">Políticas e Termos</NuxtLink>
+        <LanguageToggle class="sidebar__lang" />
+        <NuxtLink class="sidebar__footer-link" to="/politicas-e-termos">{{ t('footer.policies') }}</NuxtLink>
       </footer>
     </div>
   </aside>
@@ -101,9 +105,14 @@ onMounted(checkPhoto)
   padding-top: 3rem;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  align-items: flex-start;
+  gap: 0.85rem;
   font-size: 0.78rem;
   color: var(--color-text-tertiary);
+}
+
+.sidebar__lang {
+  margin-bottom: 0.1rem;
 }
 
 .sidebar__footer-link {

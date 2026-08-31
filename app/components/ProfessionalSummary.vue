@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { summary } from '~/data/resume'
+import { useContent } from '~/composables/useContent'
+import { useT } from '~/composables/useT'
 
-const lines = computed(() => summary.text.split('\n'))
+const c = useContent()
+const t = useT()
+
+const lines = computed(() => c.value.summary.text.split('\n'))
 </script>
 
 <template>
   <section id="sobre" class="summary" aria-labelledby="summary-title">
-    <h2 id="summary-title" class="section-title">Sobre mim</h2>
+    <h2 id="summary-title" class="section-title">{{ t('summary.title') }}</h2>
     <p class="summary__text">
       <template v-for="(line, i) in lines" :key="i">
         {{ line }}<br v-if="i < lines.length - 1" />
       </template>
       <br class="summary__break-mobile" />
-      <span class="summary__highlight">{{ summary.highlight }}</span>
+      <span class="summary__highlight">{{ c.summary.highlight }}</span>
     </p>
   </section>
 </template>

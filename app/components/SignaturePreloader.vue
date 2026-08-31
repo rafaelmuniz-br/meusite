@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { preloaderPhrase, preloaderPhraseMobile } from '~/data/resume'
+import { useLocale } from '~/composables/useLocale'
 
 const STORAGE_KEY = 'rm-preloader-shown'
 const TYPE_SPEED_MS = 45
@@ -12,16 +13,30 @@ const leaving = ref(false)
 const progressActive = ref(false)
 const typedLength = ref(0)
 
-// Definido no onMounted conforme a largura da tela (mobile usa a versão Python).
+// Frase padrão (boot). Mobile usa a versão Python; a troca de idioma usa
+// `setLocale("xx")` (definida no watch de `switching`, sem distinção mobile).
 const phrase = ref(preloaderPhrase)
+
+// Modo atual: 'boot' (1x por sessão) ou 'switch' (troca de idioma).
+const mode = ref<'boot' | 'switch'>('boot')
 
 const displayedText = computed(() => phrase.value.slice(0, typedLength.value))
 const revealMs = computed(() => phrase.value.length * TYPE_SPEED_MS)
+
+const { switching, switchPhrase } = useLocale()
 
 let typeTimer: ReturnType<typeof setInterval> | undefined
 let hideTimer: ReturnType<typeof setTimeout> | undefined
 let safetyTimer: ReturnType<typeof setTimeout> | undefined
 let rafId: number | undefined
+
+function clearTimers() {
+  if (typeTimer) clearInterval(typeTimer)
+  if (hideTimer) clearTimeout(hideTimer)
+  if (safetyTimer) clearTimeout(safetyTimer)
+  if (rafId) cancelAnimationFrame(rafId)
+  typeTimer = hideTimer = safetyTimer = rafId = undefined
+}
 
 function lockScroll(lock: boolean) {
   document.documentElement.style.overflow = lock ? 'hidden' : ''
@@ -29,12 +44,71 @@ function lockScroll(lock: boolean) {
 
 function finish() {
   visible.value = false
+  leaving.value = false
   lockScroll(false)
+  if (mode.value === 'switch') switching.value = false
 }
 
+function prefersReduced(): boolean {
+  try {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  } catch {
+    return false
+  }
+}
+
+/** Roda o efeito digitador + saída. Chamado no boot e em cada troca de idioma. */
+function runSequence() {
+  clearTimers()
+  leaving.value = false
+  typedLength.value = 0
+  progressActive.value = false
+  visible.value = true
+  lockScroll(true)
+
+  const reduced = prefersReduced()
+
+  if (reduced) {
+    typedLength.value = phrase.value.length
+    progressActive.value = true
+    hideTimer = setTimeout(() => {
+      leaving.value = true
+    }, 350)
+    safetyTimer = setTimeout(finish, 350 + EXIT_MS + 400)
+    return
+  }
+
+  rafId = requestAnimationFrame(() => {
+    progressActive.value = true
+  })
+
+  typeTimer = setInterval(() => {
+    typedLength.value += 1
+    if (typedLength.value >= phrase.value.length && typeTimer) {
+      clearInterval(typeTimer)
+      typeTimer = undefined
+    }
+  }, TYPE_SPEED_MS)
+
+  const totalBeforeExit = revealMs.value + HOLD_MS
+  hideTimer = setTimeout(() => {
+    leaving.value = true
+  }, totalBeforeExit)
+  // Rede de segurança: garante que o overlay some mesmo se a transição falhar.
+  safetyTimer = setTimeout(finish, totalBeforeExit + EXIT_MS + 400)
+}
+
+// --- Troca de idioma: cobre a tela, digita `setLocale("xx")`, revela ---------
+watch(switching, (active) => {
+  if (!active) return
+  mode.value = 'switch'
+  phrase.value = switchPhrase.value || 'setLocale("en")'
+  runSequence()
+})
+
+// --- Boot: preloader de abertura (1x por sessão) ----------------------------
 onMounted(() => {
   let alreadyShown = false
-  let prefersReduced = false
 
   try {
     if (window.matchMedia('(max-width: 768px)').matches) phrase.value = preloaderPhraseMobile
@@ -48,13 +122,7 @@ onMounted(() => {
     alreadyShown = false
   }
 
-  try {
-    prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  } catch {
-    prefersReduced = false
-  }
-
-  if (alreadyShown || prefersReduced) {
+  if (alreadyShown || prefersReduced()) {
     visible.value = false
     return
   }
@@ -65,33 +133,12 @@ onMounted(() => {
     /* sessionStorage indisponível: preloader roda mesmo assim */
   }
 
-  lockScroll(true)
-
-  rafId = requestAnimationFrame(() => {
-    progressActive.value = true
-  })
-
-  typeTimer = setInterval(() => {
-    typedLength.value += 1
-    if (typedLength.value >= phrase.value.length && typeTimer) {
-      clearInterval(typeTimer)
-    }
-  }, TYPE_SPEED_MS)
-
-  const totalBeforeExit = revealMs.value + HOLD_MS
-  hideTimer = setTimeout(() => {
-    leaving.value = true
-  }, totalBeforeExit)
-
-  // Rede de segurança: garante que o overlay some mesmo se a transição falhar.
-  safetyTimer = setTimeout(finish, totalBeforeExit + EXIT_MS + 400)
+  mode.value = 'boot'
+  runSequence()
 })
 
 onBeforeUnmount(() => {
-  if (typeTimer) clearInterval(typeTimer)
-  if (hideTimer) clearTimeout(hideTimer)
-  if (safetyTimer) clearTimeout(safetyTimer)
-  if (rafId) cancelAnimationFrame(rafId)
+  clearTimers()
   lockScroll(false)
 })
 </script>

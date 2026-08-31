@@ -1,21 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useT } from '~/composables/useT'
+
+const t = useT()
+</script>
 
 <template>
   <div class="prm-onboarding">
-    <h1 class="prm-onboarding__title">Vamos organizar seu projeto</h1>
-    <p>
-      São algumas etapas, conforme o que você escolher. <strong>Não precisa saber nada de
-      tecnologia</strong> — você me conta o problema e o que você quer, do seu jeito, e a parte
-      técnica é comigo.
-    </p>
-    <p>
-      Quanto mais detalhe você der, melhor eu consigo transformar isso no seu projeto. Só as
-      perguntas mais importantes são obrigatórias; o resto você responde à vontade.
-    </p>
-    <p>
-      Nada é salvo em servidor nenhum: suas respostas só saem daqui quando você aperta "Enviar via
-      WhatsApp" no final. Depois é só aguardar que eu te respondo por lá.
-    </p>
+    <h1 class="prm-onboarding__title">{{ t('prm.onboardingTitle') }}</h1>
+    <!-- p1 traz um <strong> — string controlada no dicionário (ui.ts) -->
+    <p v-html="t('prm.onboardingP1')" />
+    <p>{{ t('prm.onboardingP2') }}</p>
+    <p>{{ t('prm.onboardingP3') }}</p>
   </div>
 </template>
 

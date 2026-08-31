@@ -2,17 +2,9 @@
 import { computed, nextTick, onBeforeUnmount, provide, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProjectRequestModal } from '~/composables/useProjectRequestModal'
-import {
-  genericSteps,
-  isAnswered,
-  linksStep,
-  siteSteps,
-  tiktokChannelStep,
-  tiktokLabel,
-  tiktokToolDetails,
-  type Question,
-  type Step,
-} from '~/data/projectRequest'
+import { useContent } from '~/composables/useContent'
+import { useT } from '~/composables/useT'
+import { isAnswered, labelOf, type Question, type Step } from '~/data/form/types'
 import ProjectRequestOnboarding from '~/components/ProjectRequestOnboarding.vue'
 import ProjectRequestServiceType from '~/components/ProjectRequestServiceType.vue'
 import ProjectRequestTiktokServices from '~/components/ProjectRequestTiktokServices.vue'
@@ -20,6 +12,8 @@ import ProjectRequestQuestionStep from '~/components/ProjectRequestQuestionStep.
 import ProjectRequestReview from '~/components/ProjectRequestReview.vue'
 
 const { isOpen, close } = useProjectRequestModal()
+const content = useContent()
+const t = useT()
 
 // Estado único: tipo de serviço + um mapa plano de respostas (chave -> valor).
 const form = reactive({
@@ -27,35 +21,37 @@ const form = reactive({
   answers: {} as Record<string, string | string[] | boolean | undefined>,
 })
 
-// Etapas "especiais" (render próprio, sem lista de perguntas).
-const ONBOARDING: Step = { id: 'onboarding', title: '', questions: [] }
-const SERVICE: Step = { id: 'service', title: 'Que tipo de projeto você precisa?', questions: [] }
-const TIKTOK_TOOLS: Step = { id: 'tiktok-tools', title: 'O que você quer pra sua LIVE?', questions: [] }
-const REVIEW: Step = { id: 'review', title: 'Revisão', questions: [] }
 const SPECIAL = new Set(['onboarding', 'service', 'tiktok-tools', 'review'])
 
 // Monta o fluxo conforme o serviço escolhido e (no TikTok) as ferramentas marcadas.
+// Reativo ao idioma: todos os títulos/etapas vêm de `content` / `t`.
 const flow = computed<Step[]>(() => {
+  const f = content.value.form
   const s = form.serviceType
+  const ONBOARDING: Step = { id: 'onboarding', title: '', questions: [] }
+  const SERVICE: Step = { id: 'service', title: t('prm.serviceTitle'), questions: [] }
+  const TIKTOK_TOOLS: Step = { id: 'tiktok-tools', title: t('prm.tiktokToolsTitle'), questions: [] }
+  const REVIEW: Step = { id: 'review', title: t('prm.reviewTitle'), questions: [] }
+
   const out: Step[] = [ONBOARDING, SERVICE]
   if (s === 'site') {
-    out.push(...siteSteps)
+    out.push(...f.siteSteps)
   } else if (s === 'tiktok') {
     out.push(TIKTOK_TOOLS)
     const tools = (form.answers.tiktokTools as string[] | undefined) ?? []
     for (const id of tools) {
       out.push({
         id: `tt-${id}`,
-        title: tiktokLabel(id),
-        intro: 'Nenhuma pergunta aqui é obrigatória — é só pra eu entender bem o que você imagina.',
-        questions: tiktokToolDetails[id] ?? [],
+        title: labelOf(f.tiktokServices, id),
+        intro: t('prm.tiktokStepIntro'),
+        questions: f.tiktokToolDetails[id] ?? [],
       })
     }
-    out.push(tiktokChannelStep)
+    out.push(f.tiktokChannelStep)
   } else if (s) {
-    out.push(...(genericSteps[s] ?? genericSteps.outro))
+    out.push(...(f.genericSteps[s] ?? f.genericSteps.outro))
   }
-  if (s) out.push(linksStep)
+  if (s) out.push(f.linksStep)
   out.push(REVIEW)
   return out
 })
@@ -65,7 +61,7 @@ const currentIndex = computed(() => {
   const idx = flow.value.findIndex((s) => s.id === currentStepId.value)
   return idx === -1 ? 0 : idx
 })
-const currentStep = computed(() => flow.value[currentIndex.value] ?? ONBOARDING)
+const currentStep = computed(() => flow.value[currentIndex.value] ?? flow.value[0])
 
 // Chaves já perguntadas em etapas anteriores à de índice `idx` — base do "perguntar uma vez".
 function keysBefore(idx: number): Set<string> {
@@ -220,19 +216,19 @@ onBeforeUnmount(() => {
       class="prm-overlay"
       role="dialog"
       aria-modal="true"
-      :aria-label="currentStep.title || 'Solicitar projeto'"
+      :aria-label="currentStep.title || t('prm.ariaLabel')"
     >
       <div ref="panelEl" class="prm-panel">
         <header class="prm-header">
           <div class="prm-header__meta">
             <span v-if="showProgress" :key="'l' + currentStepId" class="prm-step-label prm-meta-anim">
-              Etapa {{ etapaNumber }} de {{ etapaTotal }}
+              {{ t('prm.stepOf', { n: etapaNumber, total: etapaTotal }) }}
             </span>
             <h2 v-if="currentStep.title" :key="'t' + currentStepId" class="prm-title prm-meta-anim">
               {{ currentStep.title }}
             </h2>
           </div>
-          <button class="prm-close" type="button" aria-label="Fechar" @click="resetAndClose">
+          <button class="prm-close" type="button" :aria-label="t('prm.close')" @click="resetAndClose">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M6 6l12 12M18 6 6 18" stroke-linecap="round" />
             </svg>
@@ -260,7 +256,7 @@ onBeforeUnmount(() => {
             class="prm-btn prm-btn--ghost"
             @click="goBack"
           >
-            Voltar
+            {{ t('prm.back') }}
           </button>
           <span v-else />
           <button
@@ -270,7 +266,7 @@ onBeforeUnmount(() => {
             :aria-disabled="!canProceed"
             @click="attemptNext"
           >
-            {{ currentStep.id === 'onboarding' ? 'Começar' : 'Próximo' }}
+            {{ currentStep.id === 'onboarding' ? t('prm.start') : t('prm.next') }}
           </button>
         </footer>
       </div>

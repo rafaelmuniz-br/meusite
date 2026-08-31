@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue'
+import { useT } from '~/composables/useT'
+
+const t = useT()
 
 // `field` diz qual chave de `form.answers` guarda o array de cores selecionadas.
 const props = withDefaults(defineProps<{ field?: string }>(), { field: 'colorSwatches' })
@@ -69,7 +72,7 @@ const selectedChips = computed(() => list.value)
           <rect x="3" y="13" width="8" height="8" rx="1.5" />
           <rect x="13" y="13" width="8" height="8" rx="1.5" />
         </svg>
-        Amostras
+        {{ t('prm.colorSamples') }}
       </button>
       <button
         type="button"
@@ -84,7 +87,7 @@ const selectedChips = computed(() => list.value)
           <circle cx="15" cy="12" r="1.6" fill="currentColor" stroke="none" />
           <circle cx="19" cy="18" r="1.6" fill="currentColor" stroke="none" />
         </svg>
-        Cor precisa
+        {{ t('prm.colorPrecise') }}
       </button>
     </div>
 
@@ -124,7 +127,7 @@ const selectedChips = computed(() => list.value)
           <div class="prm-precise__row">
             <span class="prm-precise__preview" :style="{ backgroundColor: preciseHex }" />
             <input v-model="preciseHex" type="text" class="prm-precise__input" />
-            <button type="button" class="prm-precise__add" aria-label="Adicionar cor" @click="addPrecise">
+            <button type="button" class="prm-precise__add" :aria-label="t('prm.colorAdd')" @click="addPrecise">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4">
                 <path d="M12 5v14M5 12h14" stroke-linecap="round" />
               </svg>
@@ -134,21 +137,21 @@ const selectedChips = computed(() => list.value)
       </div>
 
       <aside class="prm-color-selected">
-        <p class="prm-color-selected__title">Selecionadas</p>
+        <p class="prm-color-selected__title">{{ t('prm.colorSelected') }}</p>
         <div v-if="selectedChips.length" class="prm-chips">
           <button
             v-for="hex in selectedChips"
             :key="hex"
             type="button"
             class="prm-chip"
-            :aria-label="`Remover ${hex}`"
+            :aria-label="t('prm.colorRemove', { hex })"
             @click="remove(hex)"
           >
             <span class="prm-chip__dot" :style="{ backgroundColor: hex }" />
             {{ hex }}
           </button>
         </div>
-        <p v-else class="prm-color-selected__empty">Nenhuma cor ainda.</p>
+        <p v-else class="prm-color-selected__empty">{{ t('prm.colorEmpty') }}</p>
       </aside>
     </div>
   </div>

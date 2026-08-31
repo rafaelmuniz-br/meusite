@@ -1,7 +1,11 @@
 <script setup lang="ts">
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
+import { useT } from '~/composables/useT'
 
-withDefaults(defineProps<{ label?: string }>(), { label: 'Você já tem uma logo?' })
+const props = defineProps<{ label?: string }>()
+
+const t = useT()
+const label = computed(() => props.label || t('prm.logoDefaultLabel'))
 
 const ctx = inject('projectRequest') as {
   form: { answers: Record<string, unknown> }
@@ -19,7 +23,7 @@ const answers = ctx.form.answers as { hasLogo?: boolean; logoIdea?: string }
         :class="{ 'is-active': answers.hasLogo === true }"
         @click="answers.hasLogo = true"
       >
-        Sim
+        {{ t('prm.logoYes') }}
       </button>
       <button
         type="button"
@@ -27,23 +31,23 @@ const answers = ctx.form.answers as { hasLogo?: boolean; logoIdea?: string }
         :class="{ 'is-active': answers.hasLogo === false }"
         @click="answers.hasLogo = false"
       >
-        Ainda não
+        {{ t('prm.logoNo') }}
       </button>
     </div>
 
     <div v-if="answers.hasLogo === true" class="prm-reveal">
-      <span class="prm-field__hint">
-        Perfeito — depois de enviar, é só me mandar o arquivo da sua logo pelo WhatsApp.
-      </span>
+      <span class="prm-field__hint">{{ t('prm.logoHaveHint') }}</span>
     </div>
 
     <div v-else-if="answers.hasLogo === false" class="prm-reveal prm-logo-idea">
-      <label for="prm-logo-idea">Tem alguma ideia pra logo? <span class="prm-optional">(opcional)</span></label>
+      <label for="prm-logo-idea">
+        {{ t('prm.logoIdeaLabel') }} <span class="prm-optional">{{ t('prm.optional') }}</span>
+      </label>
       <textarea
         id="prm-logo-idea"
         v-model="answers.logoIdea"
         rows="2"
-        placeholder="símbolo, estilo, cores, referências que você gosta — ou deixe em branco e a gente desenvolve do zero"
+        :placeholder="t('prm.logoIdeaPlaceholder')"
       />
     </div>
   </div>

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { education } from '~/data/resume'
+import { useContent } from '~/composables/useContent'
+
+const c = useContent()
 </script>
 
 <template>
-  <p class="education">{{ education.degree }} - {{ education.institution }}</p>
+  <p class="education">{{ c.education.degree }} - {{ c.education.institution }}</p>
 </template>
 
 <style scoped>

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { whatsappNumber } from '~/data/resume'
+import { useT } from '~/composables/useT'
+
+const t = useT()
 
 const name = ref('')
 const message = ref('')
@@ -10,7 +13,8 @@ function submit() {
   touched.value = true
   if (!name.value.trim() || !message.value.trim()) return
 
-  const text = `Olá, me chamo ${name.value.trim()}.\n\n${message.value.trim()}`
+  const greeting = t('contactForm.waGreeting', { name: name.value.trim() })
+  const text = `${greeting}\n\n${message.value.trim()}`
   const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`
   window.open(url, '_blank', 'noopener,noreferrer')
 }
@@ -18,12 +22,12 @@ function submit() {
 
 <template>
   <section id="contato" class="contact-form" aria-labelledby="contact-title">
-    <h2 id="contact-title" class="section-title">Envie uma mensagem</h2>
-    <p class="contact-form__intro">Preencha os campos abaixo para iniciar uma conversa direto no WhatsApp.</p>
+    <h2 id="contact-title" class="section-title">{{ t('contactForm.title') }}</h2>
+    <p class="contact-form__intro">{{ t('contactForm.intro') }}</p>
 
     <form class="contact-form__form" novalidate @submit.prevent="submit">
       <div class="contact-form__field">
-        <label for="contact-name">Nome</label>
+        <label for="contact-name">{{ t('contactForm.name') }}</label>
         <input
           id="contact-name"
           v-model="name"
@@ -31,22 +35,22 @@ function submit() {
           autocomplete="name"
           :aria-invalid="touched && !name.trim()"
         />
-        <span v-if="touched && !name.trim()" class="contact-form__error">Informe seu nome.</span>
+        <span v-if="touched && !name.trim()" class="contact-form__error">{{ t('contactForm.nameError') }}</span>
       </div>
 
       <div class="contact-form__field">
-        <label for="contact-message">Mensagem</label>
+        <label for="contact-message">{{ t('contactForm.message') }}</label>
         <textarea
           id="contact-message"
           v-model="message"
           rows="4"
           :aria-invalid="touched && !message.trim()"
         />
-        <span v-if="touched && !message.trim()" class="contact-form__error">Escreva uma mensagem.</span>
+        <span v-if="touched && !message.trim()" class="contact-form__error">{{ t('contactForm.messageError') }}</span>
       </div>
 
       <button type="submit" class="contact-form__submit">
-        Enviar via WhatsApp
+        {{ t('contactForm.submit') }}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path
             d="M17.47 14.38c-.28-.14-1.64-.81-1.9-.9-.25-.1-.44-.14-.62.14-.19.28-.72.9-.88 1.08-.16.19-.32.21-.6.07-.28-.14-1.17-.43-2.23-1.37-.82-.73-1.38-1.64-1.54-1.92-.16-.28-.02-.43.12-.57.13-.13.28-.33.42-.5.14-.16.19-.28.28-.47.1-.19.05-.35-.02-.5-.07-.14-.62-1.5-.85-2.05-.22-.53-.45-.46-.62-.47-.16-.01-.35-.01-.53-.01-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.4 0 1.4 1.02 2.76 1.17 2.95.14.19 2 3.06 4.86 4.29.68.29 1.21.47 1.62.6.68.22 1.3.19 1.79.11.55-.08 1.64-.67 1.87-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.19-.53-.33Z"

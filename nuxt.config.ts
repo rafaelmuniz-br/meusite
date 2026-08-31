@@ -14,24 +14,14 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      // lang / title / description / og:title / og:description / og:locale são
+      // definidos reativamente em app.vue (useHead) pra acompanhar o idioma.
       htmlAttrs: { lang: 'pt-BR' },
       title: 'Rafael Muniz — Desenvolvedor Fullstack',
       meta: [
         { charset: 'utf-8' },
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        {
-          name: 'description',
-          content:
-            'Currículo profissional de Rafael Muniz, Desenvolvedor Fullstack com experiência em Vue.js, Nuxt, JavaScript, SQL e desenvolvimento web.',
-        },
         { property: 'og:type', content: 'profile' },
-        { property: 'og:title', content: 'Rafael Muniz — Desenvolvedor Fullstack' },
-        {
-          property: 'og:description',
-          content:
-            'Currículo profissional de Rafael Muniz, Desenvolvedor Fullstack com experiência em Vue.js, Nuxt, JavaScript, SQL e desenvolvimento web.',
-        },
-        { property: 'og:locale', content: 'pt_BR' },
         // Caminho relativo por enquanto — troque por uma URL absoluta
         // (https://seu-dominio/og-image.png) assim que o site for publicado,
         // pois o WhatsApp exige URL absoluta para exibir a prévia.

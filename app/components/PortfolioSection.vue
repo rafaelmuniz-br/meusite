@@ -1,14 +1,18 @@
 <script setup lang="ts">
-import { portfolio } from '~/data/resume'
+import { useContent } from '~/composables/useContent'
+import { useT } from '~/composables/useT'
+
+const c = useContent()
+const t = useT()
 </script>
 
 <template>
   <section id="portfolio" class="portfolio" aria-labelledby="portfolio-title">
-    <h2 id="portfolio-title" class="section-title">Portfólio</h2>
+    <h2 id="portfolio-title" class="section-title">{{ t('portfolio.title') }}</h2>
 
     <div class="portfolio__grid">
       <PortfolioCard
-        v-for="(item, index) in portfolio"
+        v-for="(item, index) in c.portfolio"
         :key="item.slug"
         :name="item.name"
         :description="item.description"

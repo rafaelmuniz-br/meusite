@@ -1,5 +1,5 @@
-// Todos os textos do currículo ficam centralizados aqui.
-// Edite este arquivo para atualizar o conteúdo do site.
+// Dados do currículo INDEPENDENTES de idioma + os tipos do conteúdo traduzível.
+// Os textos que traduzem ficam em `resume.pt.ts` / `resume.en.ts`.
 
 export const profile = {
   name: 'Rafael Muniz',
@@ -7,166 +7,30 @@ export const profile = {
   initials: 'RM',
 }
 
+// `labelKey` aponta pro dicionário de UI (`data/ui.ts`) — o rótulo traduz, o resto não.
 export const contacts = [
   {
-    label: 'Email',
+    labelKey: 'contact.email',
     value: 'rafael.s.m.muniz@gmail.com',
     href: 'mailto:rafael.s.m.muniz@gmail.com',
   },
   {
-    label: 'Telefone',
+    labelKey: 'contact.phone',
     value: '(71) 99105-5569',
     href: 'tel:+5571991055569',
   },
   {
-    label: 'LinkedIn',
+    labelKey: 'contact.linkedin',
     value: 'rafael-muniz-88b417245',
     href: 'https://www.linkedin.com/in/rafael-muniz-88b417245',
     external: true,
   },
-]
+] as const
 
-// Número usado pelo formulário de contato (WhatsApp), formato internacional sem símbolos.
+// Número usado pelos formulários de contato (WhatsApp), formato internacional sem símbolos.
 export const whatsappNumber = '5571991055569'
 
-export const education = {
-  degree: 'Bacharelado em Ciência e Tecnologia',
-  institution: 'UFBA',
-}
-
-// "text" usa "\n" para forçar a quebra de linha; "highlight" é a parte final
-// exibida em destaque (cor de texto primária) — o resto do texto usa a cor secundária.
-export const summary = {
-  text: 'Programador com anos de bagagem resolvendo todo tipo de problema.\nO que você precisa envolve tecnologia? ',
-  highlight: 'Eu faço acontecer.',
-}
-
-// "summary": frase curta sempre visível. "highlights": lista detalhada que fica
-// dentro do dropdown (<details>) de cada experiência — escrita no método XYZ
-// (resultado primeiro, depois como foi feito), usando só números reais do Rafael.
-export const experiences = [
-  {
-    period: 'Julho 2025 – Atual',
-    role: 'Desenvolvedor Fullstack',
-    company: 'Grupo A TARDE',
-    summary:
-      'Sites dos projetos educacionais e site institucional do grupo — desenvolvimento e manutenção contínua.',
-    highlights: [
-      'Entrego em Vue.js e Nuxt os sites dos projetos educacionais do jornal — Prêmio Educação A TARDE e Jovem Jornalista —, partindo do design definido pelo time de design e mantendo cada um atualizado a cada edição.',
-      'Mantenho o ambiente de ensino a distância dos projetos educacionais sempre disponível, administrando e dando suporte ao AVA Moodle (plataforma terceirizada).',
-      'Assumi a manutenção do site institucional do grupo (WordPress, de fornecedor terceirizado) e, em julho de 2026, propus um novo site — publicado no meu portfólio —, hoje em análise pelo grupo para substituir o atual.',
-    ],
-  },
-  {
-    period: 'Janeiro 2025 – Atual',
-    role: 'Desenvolvedor Freelancer',
-    company: '',
-    summary: 'Sites e sistemas sob demanda para empresas, do design ao deploy.',
-    highlights: [
-      'Desenvolvo sites e sistemas sob demanda para empresas de forma independente, conduzindo cada projeto sozinho do design ao deploy.',
-      'Mantenho essa atuação em paralelo ao trabalho no Grupo A TARDE, atendendo clientes do primeiro contato à entrega.',
-    ],
-  },
-  {
-    period: 'Agosto 2024 – Janeiro 2025',
-    duration: '6 meses',
-    role: 'Suporte Técnico N3',
-    company: 'Sindauto (Sindicato das Auto Escolas da Bahia)',
-    summary:
-      'Suporte N3 ao sistema interno usado por cerca de 90% dos Centros de Formação de Condutores da Bahia.',
-    highlights: [
-      'Resolvi dezenas de chamados por dia no sistema interno do sindicato — que atende cerca de 90% dos Centros de Formação de Condutores da Bahia —, atuando via CloudBeaver e diretamente no banco de dados.',
-      'Mantive as equipes operantes atendendo chamados presenciais de infraestrutura, incluindo manutenção de estações de trabalho.',
-      'Dei suporte ao gerenciamento de dados da entidade e automatizei processos internos recorrentes.',
-    ],
-  },
-  {
-    period: 'Outubro 2022 – Outubro 2024',
-    duration: '2 anos',
-    role: 'Estagiário (Bolsista PROCATI)',
-    company: 'Superintendência de TI, UFBA',
-    summary:
-      'Manutenção e evolução do GERE, sistema de gerência de eventos da UFBA em operação há mais de 20 anos.',
-    highlights: [
-      'Estive alocado no GERE (Sistema de Gerência de Eventos), plataforma multi-eventos legada com mais de 20 anos de uso, que apoia os eventos acadêmicos da UFBA.',
-      'Configurei eventos pela interface web e dei suporte de rotina a gerentes de eventos e participantes ao longo de 2 anos.',
-      'Trabalhei com o código-fonte (ASP/JavaScript) e no banco de dados (SQL Server), incluindo o desenvolvimento de relatórios em SQL.',
-      'Dei rastreabilidade às mudanças documentando tarefas no Redmine e acompanhando os chamados no GLPI.',
-      'Realizei treinamento de gerentes de eventos e novos estagiários no uso e na administração do sistema.',
-    ],
-  },
-  {
-    period: 'Março 2022 – Março 2023',
-    duration: '1 ano',
-    role: 'Voluntário',
-    company: 'Onda Digital, Grupo de Pesquisa UFBA',
-    summary:
-      'Formação de professores em Computação e desenvolvimento do site do PROFCOMP.',
-    highlights: [
-      'Colaborei por um ano no PROFCOMP (Programa de Ações Pedagógicas para Formação de Professores em Computação), braço do Onda Digital voltado às relações entre Computação, Educação e Sociedade.',
-      'Ajudei a desenvolver o site do PROFCOMP, apoiando as ações de inclusão sociodigital do grupo na Bahia.',
-    ],
-  },
-]
-
-// Descrições focadas nas atividades de desenvolvimento realizadas por Rafael em
-// cada projeto — sem afirmar vínculo societário, parceria ou representação
-// comercial (ver seção "Portfólio e Projetos Desenvolvidos" em /politicas-e-termos).
-// "status": texto curto em itálico abaixo da descrição (estágio comercial do case).
-export const portfolio = [
-  {
-    slug: 'people-equipamentos',
-    name: 'People Equipamentos',
-    description:
-      'Desenvolvimento de website institucional para a People Equipamentos, com foco na apresentação dos serviços de iluminação, painéis de LED e estrutura técnica para eventos, com experiência responsiva para dispositivos móveis.',
-    status: 'Projeto contratado',
-    url: 'https://peopleequipamentos.netlify.app/',
-    logo: '/portfolio/logos/people-equipamentos.svg',
-    bgColor: '#181818',
-  },
-  {
-    slug: 'atarde-educacao',
-    name: 'A TARDE Educação',
-    description:
-      'Desenvolvimento do site do programa A TARDE Educação, com foco na divulgação dos projetos, formações e experiências de educomunicação, priorizando a organização do conteúdo e a leitura em dispositivos móveis.',
-    status: 'Em formalização',
-    url: 'https://atardeeducacao.netlify.app/',
-    logo: '/portfolio/logos/atarde-educacao.png',
-    bgColor: '#F3F8FB',
-  },
-  {
-    slug: 'ferreira-muniz-imoveis',
-    name: 'Ferreira Muniz Imóveis',
-    description:
-      'Desenvolvimento de website institucional para a Ferreira Muniz Imóveis, com foco na apresentação da imobiliária, dos corretores e dos imóveis anunciados, com experiência responsiva para dispositivos móveis.',
-    status: 'Projeto contratado',
-    url: 'https://ferreiramunizimoveis.com.br/',
-    logo: '/portfolio/logos/ferreira-muniz-imoveis.svg',
-    bgColor: '#FFFFFF',
-    logoScale: 0.7,
-  },
-  {
-    slug: 'espaco-psique-e-vida',
-    name: 'Espaço Psique e Vida',
-    description:
-      'Desenvolvimento de website institucional para o Espaço Psique e Vida, com foco na apresentação do espaço, dos serviços oferecidos e em uma experiência responsiva para dispositivos móveis.',
-    status: 'Em formalização',
-    url: 'https://espacopsiqueevida.netlify.app/',
-    logo: '/portfolio/logos/espaco-psique-e-vida.png',
-    bgColor: '#F3E3D3',
-  },
-  {
-    slug: 'royale-solucoes-industriais',
-    name: 'Royale Soluções Industriais',
-    description:
-      'Desenvolvimento de website institucional para a Royale Soluções Industriais, com foco na apresentação das soluções de automação industrial da empresa.',
-    status: 'Em formalização',
-    url: 'https://royalesolucoesindustriais.netlify.app/',
-    logo: '/portfolio/logos/royale-solucoes-industriais.png',
-    bgColor: '#FFFFFF',
-  },
-]
-
+// Habilidades técnicas — termos que não traduzem.
 export const skills = [
   'Vue.js / Nuxt',
   'JavaScript / HTML / CSS',
@@ -182,7 +46,39 @@ export const skills = [
   'Figma / UI/UX',
 ]
 
-// Texto "digitado" no preloader de assinatura (efeito terminal).
+// Texto "digitado" no preloader de assinatura (efeito terminal). Código, não traduz.
 // Desktop: Java. Mobile (<= 768px): Python, mais curto — cabe melhor na tela.
 export const preloaderPhrase = 'System.out.println("Rafael Muniz");'
 export const preloaderPhraseMobile = 'print("Rafael Muniz")'
+
+// ---------------------------------------------------------------------------
+// Tipos do conteúdo traduzível (resume.pt.ts / resume.en.ts seguem esta forma)
+// ---------------------------------------------------------------------------
+
+export interface Experience {
+  period: string
+  role: string
+  company: string
+  duration?: string
+  summary: string
+  highlights: string[]
+}
+
+export interface PortfolioItem {
+  slug: string
+  name: string
+  description: string
+  status: string
+  url: string
+  logo: string
+  bgColor: string
+  logoScale?: number
+}
+
+export interface ResumeContent {
+  education: { degree: string; institution: string }
+  // "text" usa "\n" pra quebra de linha; "highlight" é a parte final em destaque.
+  summary: { text: string; highlight: string }
+  experiences: Experience[]
+  portfolio: PortfolioItem[]
+}

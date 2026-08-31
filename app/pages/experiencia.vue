@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useT } from '~/composables/useT'
+
 definePageMeta({ layout: 'resume' })
 
+const t = useT()
+
 useSeoMeta({
-  title: 'Experiência e Habilidades — Rafael Muniz',
-  description:
-    'Experiência profissional e habilidades técnicas de Rafael Muniz, Desenvolvedor Fullstack.',
+  title: () => t('seo.experienciaTitle'),
+  description: () => t('seo.experienciaDesc'),
 })
 </script>
 

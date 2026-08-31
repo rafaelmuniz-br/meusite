@@ -1,16 +1,20 @@
 <script setup lang="ts">
+import { useT } from '~/composables/useT'
+
 definePageMeta({ layout: 'resume' })
 
+const t = useT()
+
 useSeoMeta({
-  title: 'Contato — Rafael Muniz',
-  description: 'Fale com Rafael Muniz diretamente pelo WhatsApp, e-mail ou LinkedIn.',
+  title: () => t('seo.contatoTitle'),
+  description: () => t('seo.contatoDesc'),
 })
 </script>
 
 <template>
   <header class="contato-intro">
-    <h1 class="section-title">Contato</h1>
-    <p>Tem um projeto em mente, um problema ou só quer trocar uma ideia sobre tecnologia? Entre em contato!</p>
+    <h1 class="section-title">{{ t('contato.title') }}</h1>
+    <p>{{ t('contato.intro') }}</p>
   </header>
 
   <ContactMethods />

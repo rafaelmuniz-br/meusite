@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, inject, type ComputedRef } from 'vue'
-import { serviceLabel, tiktokLabel, type Question, type Step } from '~/data/projectRequest'
+import { labelOf, type Question, type Step } from '~/data/form/types'
 import { whatsappNumber } from '~/data/resume'
+import { useContent } from '~/composables/useContent'
+import { useT } from '~/composables/useT'
 
 type Answers = Record<string, string | string[] | boolean | undefined>
 
@@ -11,6 +13,15 @@ const ctx = inject('projectRequest') as {
   flow: ComputedRef<Step[]>
 }
 const form = ctx.form
+const content = useContent()
+const t = useT()
+
+function serviceLabel(id: string): string {
+  return labelOf(content.value.form.serviceTypes, id, t('prm.serviceFallback'))
+}
+function tiktokLabel(id: string): string {
+  return labelOf(content.value.form.tiktokServices, id)
+}
 
 // Rótulo pra mensagem: usa o `mine` (voz do cliente, 1ª pessoa) quando existe;
 // senão cai pro label enxuto (corta antes do "?", ":" ou 2ª frase).
@@ -26,10 +37,10 @@ function msgLabel(q: Question): string {
 
 function fmtAnswer(q: Question, a: Answers): string | null {
   if (q.type === 'logo') {
-    if (a.hasLogo === true) return 'já tenho, envio o arquivo pelo WhatsApp'
+    if (a.hasLogo === true) return t('prm.msgLogoHave')
     if (a.hasLogo === false) {
       const idea = ((a.logoIdea as string) || '').trim()
-      return idea ? `ainda não tenho — ideia: ${idea}` : 'ainda não tenho, quero desenvolver do zero'
+      return idea ? t('prm.msgLogoIdea', { idea }) : t('prm.msgLogoNone')
     }
     return null
   }
@@ -48,24 +59,30 @@ function fmtAnswer(q: Question, a: Answers): string | null {
   if (q.type === 'toggle') {
     const v = a[q.key]
     if (v !== true && v !== false) return null
-    let s = v ? (q.toggleLabels ? q.toggleLabels[0] : 'Sim') : q.toggleLabels ? q.toggleLabels[1] : 'Não'
+    let s = v
+      ? q.toggleLabels
+        ? q.toggleLabels[0]
+        : t('prm.yes')
+      : q.toggleLabels
+        ? q.toggleLabels[1]
+        : t('prm.no')
     if (v === true && q.reveal) {
       const rv = ((a[q.reveal.key] as string) || '').trim()
       if (rv) s += ` — ${rv}`
     }
     return s
   }
-  const t = ((a[q.key] as string) || '').trim()
-  return t || null
+  const txt = ((a[q.key] as string) || '').trim()
+  return txt || null
 }
 
 function buildMessage(): string {
   const lines: string[] = []
-  lines.push(`Olá, Rafael! Tenho interesse em *${serviceLabel(form.serviceType)}*.`, '')
+  lines.push(t('prm.msgHello', { service: serviceLabel(form.serviceType) }), '')
 
   if (form.serviceType === 'tiktok') {
     const tools = (form.answers.tiktokTools as string[] | undefined) ?? []
-    if (tools.length) lines.push(`Ferramentas de LIVE: ${tools.map(tiktokLabel).join(', ')}`, '')
+    if (tools.length) lines.push(t('prm.msgTools', { tools: tools.map(tiktokLabel).join(', ') }), '')
   }
 
   const seen = new Set<string>()
@@ -95,7 +112,7 @@ function send() {
 
 <template>
   <div class="prm-review">
-    <p class="prm-review__intro">Confira o resumo antes de enviar. Você pode voltar pra ajustar qualquer coisa.</p>
+    <p class="prm-review__intro">{{ t('prm.reviewIntro') }}</p>
 
     <div class="prm-review__preview">
       <span
@@ -103,14 +120,14 @@ function send() {
         :key="i"
         class="prm-review__line"
         :style="{ animationDelay: Math.min(i, 14) * 28 + 'ms' }"
-        >{{ line || ' ' }}</span
+        >{{ line || ' ' }}</span
       >
     </div>
 
     <div class="prm-review__actions">
-      <button type="button" class="prm-btn prm-btn--ghost" @click="ctx.goBack">Voltar</button>
+      <button type="button" class="prm-btn prm-btn--ghost" @click="ctx.goBack">{{ t('prm.back') }}</button>
       <button type="button" class="prm-btn prm-btn--primary" @click="send">
-        Enviar via WhatsApp
+        {{ t('prm.reviewSend') }}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path
             d="M17.47 14.38c-.28-.14-1.64-.81-1.9-.9-.25-.1-.44-.14-.62.14-.19.28-.72.9-.88 1.08-.16.19-.32.21-.6.07-.28-.14-1.17-.43-2.23-1.37-.82-.73-1.38-1.64-1.54-1.92-.16-.28-.02-.43.12-.57.13-.13.28-.33.42-.5.14-.16.19-.28.28-.47.1-.19.05-.35-.02-.5-.07-.14-.62-1.5-.85-2.05-.22-.53-.45-.46-.62-.47-.16-.01-.35-.01-.53-.01-.19 0-.5.07-.76.35-.26.28-1 .98-1 2.4 0 1.4 1.02 2.76 1.17 2.95.14.19 2 3.06 4.86 4.29.68.29 1.21.47 1.62.6.68.22 1.3.19 1.79.11.55-.08 1.64-.67 1.87-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.19-.53-.33Z"

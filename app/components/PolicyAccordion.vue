@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { policySections } from '~/data/policies'
+import { useContent } from '~/composables/useContent'
+
+const c = useContent()
 </script>
 
 <template>
   <div class="policy-accordion">
-    <details v-for="(section, index) in policySections" :key="section.id" :id="section.id" :open="index === 0">
+    <details v-for="(section, index) in c.policies.sections" :key="section.id" :id="section.id" :open="index === 0">
       <summary>
         <span class="policy-accordion__title">{{ section.title }}</span>
         <svg
