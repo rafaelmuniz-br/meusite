@@ -118,8 +118,10 @@ reintroduzir esse padrão aqui sem necessidade real.
 
 ## Portfólio (`PortfolioSection.vue` + `PortfolioCard.vue`)
 
-5 projetos reais em `resume.ts` (`portfolio` array): People Equipamentos, A TARDE
-Educação, Ferreira Muniz Imóveis, Espaço Psique e Vida, Royale Soluções Industriais.
+6 projetos reais no `portfolio` array (`resume.pt.ts` / `resume.en.ts`), nesta ordem:
+People Equipamentos, A TARDE Educação, Ferreira Muniz Imóveis, Kalu, Royale Soluções
+Industriais, Espaço Psique e Vida. Kalu = loja de óculos, Salvador — catálogo + checkout
+por WhatsApp; logo `wordmark.svg` verde-oliva sobre fundo creme `#FAF7F0`, `logoScale: 1.05`.
 As descrições foram reescritas (30/08/2026) no formato "Desenvolvimento de website
 institucional para X, com foco em … e experiência responsiva para dispositivos móveis"
 — foco nas **atividades de desenvolvimento** do Rafael, sem afirmar vínculo
@@ -128,10 +130,10 @@ Desenvolvidos" em `policies.ts`). O nome fantasia continua sendo o título do ca
 
 Cada item tem também um campo `status` — texto curto em **itálico**, cor terciária,
 renderizado logo abaixo da descrição (`.portfolio-card__status`). Valores atuais
-(30/08/2026): "Projeto contratado" (People, Ferreira Muniz) e "Em formalização"
-(A TARDE, Espaço Psique, Royale). É o estágio comercial do case. O `<p>` só aparece
-se `status` estiver preenchido. A descrição do Royale foi encurtada ~2 linhas nesse
-mesmo pedido pra abrir espaço pro status sem esticar o card.
+(03/09/2026): "Formalizado" (People, Ferreira Muniz, Kalu) e "Em formalização"
+(A TARDE, Espaço Psique, Royale) — EN: "Formalized" / "Being formalized". É o estágio
+comercial do case. O `<p>` só aparece se `status` estiver preenchido. A descrição do
+Royale foi encurtada ~2 linhas pra abrir espaço pro status sem esticar o card.
 
 Decisão de design importante: cada card usa **logo + cor de fundo sólida** (campos
 `logo`, `bgColor`, `logoScale` opcional em cada item), **não** foto/screenshot do site.

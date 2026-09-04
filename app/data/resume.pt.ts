@@ -84,7 +84,7 @@ export const resumePt: ResumeContent = {
       name: 'People Equipamentos',
       description:
         'Desenvolvimento de website institucional para a People Equipamentos, com foco na apresentação dos serviços de iluminação, painéis de LED e estrutura técnica para eventos, com experiência responsiva para dispositivos móveis.',
-      status: 'Projeto contratado',
+      status: 'Formalizado',
       url: 'https://peopleequipamentos.netlify.app/',
       logo: '/portfolio/logos/people-equipamentos.svg',
       bgColor: '#181818',
@@ -104,21 +104,22 @@ export const resumePt: ResumeContent = {
       name: 'Ferreira Muniz Imóveis',
       description:
         'Desenvolvimento de website institucional para a Ferreira Muniz Imóveis, com foco na apresentação da imobiliária, dos corretores e dos imóveis anunciados, com experiência responsiva para dispositivos móveis.',
-      status: 'Projeto contratado',
+      status: 'Formalizado',
       url: 'https://ferreiramunizimoveis.com.br/',
       logo: '/portfolio/logos/ferreira-muniz-imoveis.svg',
       bgColor: '#FFFFFF',
       logoScale: 0.7,
     },
     {
-      slug: 'espaco-psique-e-vida',
-      name: 'Espaço Psique e Vida',
+      slug: 'loja-kalu',
+      name: 'Kalu',
       description:
-        'Desenvolvimento de website institucional para o Espaço Psique e Vida, com foco na apresentação do espaço, dos serviços oferecidos e em uma experiência responsiva para dispositivos móveis.',
-      status: 'Em formalização',
-      url: 'https://espacopsiqueevida.netlify.app/',
-      logo: '/portfolio/logos/espaco-psique-e-vida.png',
-      bgColor: '#F3E3D3',
+        'Desenvolvimento do site da Kalu, loja de óculos de Salvador, com catálogo de modelos, seleção de variações (cor, haste e vista) e finalização do pedido pelo WhatsApp, priorizando a experiência em dispositivos móveis.',
+      status: 'Formalizado',
+      url: 'https://lojakalu.netlify.app/',
+      logo: '/portfolio/logos/loja-kalu.svg',
+      bgColor: '#FAF7F0',
+      logoScale: 1.05,
     },
     {
       slug: 'royale-solucoes-industriais',
@@ -129,6 +130,16 @@ export const resumePt: ResumeContent = {
       url: 'https://royalesolucoesindustriais.netlify.app/',
       logo: '/portfolio/logos/royale-solucoes-industriais.png',
       bgColor: '#FFFFFF',
+    },
+    {
+      slug: 'espaco-psique-e-vida',
+      name: 'Espaço Psique e Vida',
+      description:
+        'Desenvolvimento de website institucional para o Espaço Psique e Vida, com foco na apresentação do espaço, dos serviços oferecidos e em uma experiência responsiva para dispositivos móveis.',
+      status: 'Em formalização',
+      url: 'https://espacopsiqueevida.netlify.app/',
+      logo: '/portfolio/logos/espaco-psique-e-vida.png',
+      bgColor: '#F3E3D3',
     },
   ],
 }

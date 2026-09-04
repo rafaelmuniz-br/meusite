@@ -81,7 +81,7 @@ export const resumeEn: ResumeContent = {
       name: 'People Equipamentos',
       description:
         'Institutional website development for People Equipamentos, focused on presenting their professional lighting services, LED panels and technical structure for events, with a responsive experience for mobile devices.',
-      status: 'Contracted project',
+      status: 'Formalized',
       url: 'https://peopleequipamentos.netlify.app/',
       logo: '/portfolio/logos/people-equipamentos.svg',
       bgColor: '#181818',
@@ -101,21 +101,22 @@ export const resumeEn: ResumeContent = {
       name: 'Ferreira Muniz Imóveis',
       description:
         'Institutional website development for Ferreira Muniz Imóveis, focused on presenting the agency, its brokers and the listed properties, with a responsive experience for mobile devices.',
-      status: 'Contracted project',
+      status: 'Formalized',
       url: 'https://ferreiramunizimoveis.com.br/',
       logo: '/portfolio/logos/ferreira-muniz-imoveis.svg',
       bgColor: '#FFFFFF',
       logoScale: 0.7,
     },
     {
-      slug: 'espaco-psique-e-vida',
-      name: 'Espaço Psique e Vida',
+      slug: 'loja-kalu',
+      name: 'Kalu',
       description:
-        'Institutional website development for Espaço Psique e Vida, focused on presenting the practice, the services offered and a responsive experience for mobile devices.',
-      status: 'Being formalized',
-      url: 'https://espacopsiqueevida.netlify.app/',
-      logo: '/portfolio/logos/espaco-psique-e-vida.png',
-      bgColor: '#F3E3D3',
+        'Website development for Kalu, a sunglasses shop in Salvador, with a catalog of models, variant selection (color, temple and view) and order checkout via WhatsApp, prioritizing the mobile experience.',
+      status: 'Formalized',
+      url: 'https://lojakalu.netlify.app/',
+      logo: '/portfolio/logos/loja-kalu.svg',
+      bgColor: '#FAF7F0',
+      logoScale: 1.05,
     },
     {
       slug: 'royale-solucoes-industriais',
@@ -126,6 +127,16 @@ export const resumeEn: ResumeContent = {
       url: 'https://royalesolucoesindustriais.netlify.app/',
       logo: '/portfolio/logos/royale-solucoes-industriais.png',
       bgColor: '#FFFFFF',
+    },
+    {
+      slug: 'espaco-psique-e-vida',
+      name: 'Espaço Psique e Vida',
+      description:
+        'Institutional website development for Espaço Psique e Vida, focused on presenting the practice, the services offered and a responsive experience for mobile devices.',
+      status: 'Being formalized',
+      url: 'https://espacopsiqueevida.netlify.app/',
+      logo: '/portfolio/logos/espaco-psique-e-vida.png',
+      bgColor: '#F3E3D3',
     },
   ],
 }
